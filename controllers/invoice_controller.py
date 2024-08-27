@@ -9,17 +9,10 @@ from lib.authenticate import authenticate_return_auth
 
 def invoice_add(request):
     post_data = request.form if request.form else request.json
-    invoice_id = post_data.get("invoice_id")
 
     new_invoice = Invoice.new_invoice_obj()
 
     populate_object(new_invoice, post_data)
-
-    if invoice_id:
-        invoice_query = db.session.query(Invoice).filter(Invoice.invoice_id == invoice_id).first()
-
-        if invoice_query == None:
-            return jsonify({"message": "invoice id required"}), 400
 
     db.session.add(new_invoice)
     db.session.commit()

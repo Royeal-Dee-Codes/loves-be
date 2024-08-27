@@ -22,7 +22,7 @@ def auth_token_add(request):
     user_query = db.session.query(AppUsers).filter(AppUsers.email == email).first()
     employee_query = db.session.query(Employees).filter(Employees.email == email).first()
 
-    if user_query:
+    if user_query != None:
         is_password_valid = check_password_hash(user_query.password, password)
 
         if is_password_valid == False:
@@ -35,26 +35,31 @@ def auth_token_add(request):
                 if token.expiration < now_datetime:
                     db.session.delete(token)
 
-        elif employee_query:
-            is_password_valid = check_password_hash(employee_query.password, password)
-
-            if is_password_valid == False:
-                return jsonify({"message": "invalid password"}), 401
-
-            existing_tokens = db.session.query(AuthTokens).filter(AuthTokens.employee_id == employee_query.employee_id).all()
-
-            if existing_tokens:
-                for token in existing_tokens:
-                    if token.expiration < now_datetime:
-                        db.session.delete(token)
-
-        new_token = AuthTokens(expiration_datetime, user_query.user_id)
+        new_token = AuthTokens(expiration_datetime, user_query.user_id, None)
 
         db.session.add(new_token)
         db.session.commit()
 
-        if new_token:
-            return jsonify({"message": "authorization successful", "result": auth_token_schema.dump(new_token)}), 201
+    elif employee_query != None:
+        is_password_valid = check_password_hash(employee_query.password, password)
+
+        if is_password_valid == False:
+            return jsonify({"message": "invalid password"}), 401
+
+        existing_tokens = db.session.query(AuthTokens).filter(AuthTokens.employee_id == employee_query.employee_id).all()
+
+        if existing_tokens:
+            for token in existing_tokens:
+                if token.expiration < now_datetime:
+                    db.session.delete(token)
+
+        new_token = AuthTokens(expiration_datetime, None, employee_query.employee_id)
+
+        db.session.add(new_token)
+        db.session.commit()
+
+    if new_token:
+        return jsonify({"message": "authorization successful", "result": auth_token_schema.dump(new_token)}), 201
 
     else:
         return jsonify({"message": "ERROR: Request must be made in JSON format"}), 400
