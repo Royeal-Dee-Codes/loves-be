@@ -34,3 +34,4 @@ class ServicesSchema(ma.Schema):
 
 
 service_schema = ServicesSchema()
+services_schema = ServicesSchema(many=True)

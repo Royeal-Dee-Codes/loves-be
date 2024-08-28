@@ -36,3 +36,4 @@ class AppointmentsSchema(ma.Schema):
 
 
 appt_schema = AppointmentsSchema()
+appts_schema = AppointmentsSchema(many=True)

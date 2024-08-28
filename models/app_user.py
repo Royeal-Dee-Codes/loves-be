@@ -18,7 +18,7 @@ class AppUsers(db.Model):
     role = db.Column(db.Enum('user', 'super-admin', 'employee', name='role'), nullable=False, default=False)
     active = db.Column(db.Boolean(), nullable=False, default=True)
 
-    auth = db.relationship('AuthTokens', backref='user')
+    auth = db.relationship('AuthTokens', back_populates='user')
 
     def __init__(self, first_name, last_name, email, address, password, phone_number, role='role', active=True):
         self.first_name = first_name

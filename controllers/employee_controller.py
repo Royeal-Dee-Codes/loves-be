@@ -26,7 +26,7 @@ def employee_add(request):
 def employee_get_by_id(request, employee_id, auth_info):
     employee_query = db.session.query(Employees).filter(Employees.employee_id == employee_id).first()
 
-    if employee_id == str(auth_info.employees.employee_id) or auth_info.employee.role == 'employee':
+    if employee_id == str(auth_info.employee.employee_id) or auth_info.employee.role == 'employee':
         return jsonify({"message": "employee found", "results": employee_schema.dump(employee_query)}), 200
 
     else:
@@ -36,9 +36,10 @@ def employee_get_by_id(request, employee_id, auth_info):
 @authenticate_return_auth
 def employees_get_all(request, auth_info):
     employee_query = db.session.query(Employees).all()
-
-    if auth_info.employee.role == 'employee':
-        return jsonify({"message": "employees found", "results": employees_schema.dump(employee_query)}), 200
+    print(auth_info.user)
+    if auth_info.employee != None:
+        if auth_info.employee.role == 'employee':
+            return jsonify({"message": "employees found", "results": employees_schema.dump(employee_query)}), 200
 
     else:
         return jsonify({"message": "unauthorized"}), 401

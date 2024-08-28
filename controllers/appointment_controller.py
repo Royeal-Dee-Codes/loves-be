@@ -2,7 +2,7 @@ from flask import jsonify
 
 from db import db
 from models.app_user import AppUsers, AppUsersSchema
-from models.appointment import Appointment, appt_schema
+from models.appointment import Appointment, appt_schema, appts_schema
 from models.service import Service, service_schema
 from util.reflection import populate_object
 from lib.authenticate import authenticate_return_auth
@@ -29,10 +29,11 @@ def appt_add(request):
 
 
 @authenticate_return_auth
-def appt_get_by_id(request, user_id, appt_id, auth_info):
+def appt_get_by_id(request, appt_id, auth_info):
     appt_query = db.session.query(Appointment).filter(Appointment.appt_id == appt_id).first()
+    user_id = db.session.query(AppUsers).filter(AppUsers.user_id == auth_info.user.user_id).first()
 
-    if user_id == str(auth_info.user.user_id) or auth_info.user.role == 'super-admin':
+    if user_id or auth_info.user.role == 'super-admin':
         return jsonify({"message": "appointment found", "results": appt_schema.dump(appt_query)}), 200
 
     else:
@@ -44,7 +45,7 @@ def appt_get_all(request, auth_info):
     appt_query = db.session.query(Appointment).all()
 
     if auth_info.user.role == 'super-admin':
-        return jsonify({"message": "appointments found", "results": appt_schema.dump(appt_query)}), 200
+        return jsonify({"message": "appointments found", "results": appts_schema.dump(appt_query)}), 200
 
     else:
         return jsonify({"message": "unauthorized"}), 401
