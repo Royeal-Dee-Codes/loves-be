@@ -18,3 +18,8 @@ def service_get_by_id(service_id):
 @service.route('/services', methods=['GET'])
 def services_get_all():
     return controllers.services_get_all(request)
+
+
+@service.route('/service/delete/<service_id>', methods=['DELETE'])
+def service_delete(service_id):
+    return controllers.service_delete(request, service_id)

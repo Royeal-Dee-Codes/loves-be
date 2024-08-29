@@ -14,8 +14,6 @@ class Service(db.Model):
     price = db.Column(db.Float(), nullable=False)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('AppUsers.user_id'), nullable=False)
 
-    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('AppUsers.user_id'))
-
     def __init__(self, service_name, description, price, user):
         self.service_name = service_name
         self.description = description
@@ -28,9 +26,10 @@ class Service(db.Model):
 
 class ServicesSchema(ma.Schema):
     class Meta:
-        fields = ['service_id', 'service_name', 'description', 'price', 'user']
+        fields = ['service_id', 'service_name', 'description', 'price', 'user_id']
 
         user = ma.fields.Nested('AppUsersSchema', exclude=['user'])
 
 
 service_schema = ServicesSchema()
+services_schema = ServicesSchema(many=True)

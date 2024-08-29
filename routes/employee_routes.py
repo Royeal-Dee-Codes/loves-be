@@ -18,3 +18,13 @@ def employee_get_by_id(employee_id):
 @employees.route('/employees', methods=['GET'])
 def employees_get_all():
     return controllers.employees_get_all(request)
+
+
+@employees.route('/employee/delete/<employee_id>', methods=['DELETE'])
+def employee_delete(employee_id):
+    return controllers.employee_delete(request, employee_id)
+
+
+@employees.route('/employee/<employee_id>', methods=['PUT'])
+def employee_update(employee_id):
+    return controllers.employee_update(request, employee_id)

@@ -28,7 +28,7 @@ class InvoicesSchema(ma.Schema):
     class Meta:
         fields = ['invoice_id', 'total_amount', 'issued_date', 'payment_status']
 
-    # appt_id = ma.fields.Nested('AppointmentSchema', exclude=['appt_id'])
+    appt_id = ma.fields.Nested('AppointmentSchema', exclude=['appt_id'])
 
 
 invoice_schema = InvoicesSchema()
