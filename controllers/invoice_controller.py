@@ -66,7 +66,7 @@ def invoice_delete(request, invoice_id, auth_info):
 
 @authenticate_return_auth
 def invoice_update(request, invoice_id, auth_info):
-    post_data = request.json()
+    post_data = request.json
 
     if not validate_uuid4(invoice_id):
         return jsonify({"message": "invalid invoice id"}), 400
@@ -82,6 +82,6 @@ def invoice_update(request, invoice_id, auth_info):
         populate_object(invoice_record, post_data)
 
         db.session.commit()
-        return jsonify({"message": "invoice updated", "results": invoices_schema.dump(invoice_record)}), 200
+        return jsonify({"message": "invoice updated", "results": invoice_schema.dump(invoice_record)}), 200
 
     return jsonify({"message": "invoice not found"}), 404

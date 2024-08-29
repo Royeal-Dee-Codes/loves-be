@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 import os
 
 from db import *
@@ -15,6 +16,7 @@ database_name = os.environ.get('DATABASE_NAME')
 
 
 app = Flask(__name__)
+CORS(app)
 register_blueprints(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'{database_scheme}{database_user}@{database_address}:{database_port}/{database_name}'

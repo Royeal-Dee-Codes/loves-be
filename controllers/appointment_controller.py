@@ -3,7 +3,7 @@ from flask import jsonify
 from db import db
 from models.app_user import AppUsers, AppUsersSchema
 from models.appointment import Appointment, appt_schema, appts_schema
-from models.service import Service, service_schema
+from models.service import Service
 from util.validate_uuid4 import validate_uuid4
 from util.reflection import populate_object
 from lib.authenticate import authenticate_return_auth
