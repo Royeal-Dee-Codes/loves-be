@@ -70,7 +70,7 @@ def appt_delete(request, appt_id, auth_info):
 
 @authenticate_return_auth
 def appt_update(request, appt_id, auth_info):
-    post_data = request.json()
+    post_data = request.json
 
     if not validate_uuid4(appt_id):
         return jsonify({"message": "invalid appointment id"}), 400
@@ -86,6 +86,6 @@ def appt_update(request, appt_id, auth_info):
         populate_object(appointment_record, post_data)
 
         db.session.commit()
-        return jsonify({"message": "appointment updated", "results": appts_schema.dump(appointment_record)}), 200
+        return jsonify({"message": "appointment updated", "results": appt_schema.dump(appointment_record)}), 200
 
     return jsonify({"message": "appointment not found"}), 404
