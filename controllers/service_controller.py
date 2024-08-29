@@ -62,3 +62,26 @@ def service_delete(request, service_id, auth_info):
     db.session.commit()
 
     return jsonify({"message": "service deleted"}), 200
+
+
+@authenticate_return_auth
+def service_update(request, service_id, auth_info):
+    post_data = request.json
+
+    if not validate_uuid4(service_id):
+        return jsonify({"message": "invalid service id"}), 400
+
+    service_query = db.session.query(Service).filter(Service.service_id == service_id)
+
+    if auth_info.user.role != "super-admin":
+        service_query = service_query.filter(Service.service_id == auth_info.user_id)
+
+    service_record = service_query.first()
+
+    if service_record:
+        populate_object(service_record, post_data)
+
+        db.session.commit()
+        return jsonify({"message": "service updated", "results": service_schema.dump(service_record)}), 200
+
+    return jsonify({"message": "service not found"}), 404

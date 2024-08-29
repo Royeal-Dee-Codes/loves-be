@@ -23,3 +23,8 @@ def services_get_all():
 @service.route('/service/delete/<service_id>', methods=['DELETE'])
 def service_delete(service_id):
     return controllers.service_delete(request, service_id)
+
+
+@service.route('/service/<service_id>', methods=['PUT'])
+def service_update(service_id):
+    return controllers.service_update(request, service_id)
